@@ -2,6 +2,8 @@ package oop.inheritance;
 
 import java.time.LocalDateTime;
 
+import oop.inheritance.core.TPVDisplay;
+import oop.inheritance.core.TPVPrinter;
 import oop.inheritance.data.Card;
 import oop.inheritance.data.CommunicationType;
 import oop.inheritance.data.SupportedTerminal;
@@ -16,35 +18,29 @@ import oop.inheritance.ingenico.IngenicoKeyboard;
 import oop.inheritance.ingenico.IngenicoModem;
 import oop.inheritance.ingenico.IngenicoPrinter;
 import oop.inheritance.verifone.v240m.VerifoneV240mDisplay;
+import oop.inheritance.verifone.vx520.VerifoneVx520Display;
+import oop.inheritance.verifone.vx690.VerifoneVx690Display;
 
 public class Application {
 
     private CommunicationType communicationType = CommunicationType.ETHERNET;
     private SupportedTerminal supportedTerminal;
 
+    private TPVDisplay tpvDisplay;
+    private TPVPrinter tpvPrinter;
+
     public Application(SupportedTerminal supportedTerminal) {
         this.supportedTerminal = supportedTerminal;
     }
 
     public void showMenu() {
-        if (supportedTerminal == SupportedTerminal.INGENICO) {
-            IngenicoDisplay ingenicoDisplay = new IngenicoDisplay();
+        displayInstance();
 
-            ingenicoDisplay.showMessage(5, 5, "MENU");
-            ingenicoDisplay.showMessage(5, 10, "1. VENTA");
-            ingenicoDisplay.showMessage(5, 13, "2. DEVOLUCION");
-            ingenicoDisplay.showMessage(5, 16, "3. REPORTE");
-            ingenicoDisplay.showMessage(5, 23, "4. CONFIGURACION");
-        } else {
-            VerifoneV240mDisplay verifoneV240mDisplay = new VerifoneV240mDisplay();
-
-            verifoneV240mDisplay.showMessage(5, 5, "MENU");
-            verifoneV240mDisplay.showMessage(5, 10, "1. VENTA");
-            verifoneV240mDisplay.showMessage(5, 13, "2. DEVOLUCION");
-            verifoneV240mDisplay.showMessage(5, 16, "3. REPORTE");
-            verifoneV240mDisplay.showMessage(5, 23, "4. CONFIGURACION");
-        }
-
+        tpvDisplay.showMessage(5, 5, "MENU");
+        tpvDisplay.showMessage(5, 10, "1. VENTA");
+        tpvDisplay.showMessage(5, 13, "2. DEVOLUCION");
+        tpvDisplay.showMessage(5, 16, "3. REPORTE");
+        tpvDisplay.showMessage(5, 23, "4. CONFIGURACION");
     }
 
     public String readKey() {
@@ -89,16 +85,15 @@ public class Application {
     }
 
     private void printReceipt(Transaction transaction, String hostReference) {
-        IngenicoPrinter ingenicoPrinter = new IngenicoPrinter();
         Card card = transaction.getCard();
 
-        ingenicoPrinter.print(5, "APROBADA");
-        ingenicoPrinter.lineFeed();
-        ingenicoPrinter.print(5, card.getAccount());
-        ingenicoPrinter.lineFeed();
-        ingenicoPrinter.print(5, "" + transaction.getAmountInCents());
-        ingenicoPrinter.lineFeed();
-        ingenicoPrinter.print(5, "________________");
+        tpvPrinter.print(5, "APROBADA");
+        tpvPrinter.lineFeed();
+        tpvPrinter.print(5, card.getAccount());
+        tpvPrinter.lineFeed();
+        tpvPrinter.print(5, "" + transaction.getAmountInCents());
+        tpvPrinter.lineFeed();
+        tpvPrinter.print(5, "________________");
 
     }
 
@@ -142,14 +137,25 @@ public class Application {
     }
 
     public void clearScreen() {
+
+        displayInstance();
+
+        tpvDisplay.clear();
+    }
+
+    private void displayInstance() {
         if (supportedTerminal == SupportedTerminal.INGENICO) {
-            IngenicoDisplay ingenicoDisplay = new IngenicoDisplay();
+            tpvDisplay = new IngenicoDisplay();
 
-            ingenicoDisplay.clear();
-        } else {
-            VerifoneV240mDisplay verifoneV240mDisplay = new VerifoneV240mDisplay();
+        } else if (supportedTerminal == SupportedTerminal.VERIFONE_240) {
+            tpvDisplay = new VerifoneV240mDisplay();
 
-            verifoneV240mDisplay.clear();
+        } else if (supportedTerminal == SupportedTerminal.VERIFONE_520) {
+            tpvDisplay = new VerifoneVx520Display();
+
+        } else if (supportedTerminal == SupportedTerminal.VERIFONE_690) {
+            tpvDisplay = new VerifoneVx690Display();
         }
     }
+
 }
