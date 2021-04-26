@@ -4,6 +4,19 @@ import java.util.Properties;
 
 public class VerifoneVx690StorageSystem {
 
+    static public VerifoneVx690StorageSystem uniqueInstance;
+
+    private VerifoneVx690StorageSystem(){
+
+    }
+
+    static public VerifoneVx690StorageSystem getInstance(){
+        if(uniqueInstance == null) {
+            uniqueInstance = new VerifoneVx690StorageSystem();
+        }
+        return uniqueInstance;
+    }
+
     private Properties properties = new Properties();
 
     public void save(String key, String value) {

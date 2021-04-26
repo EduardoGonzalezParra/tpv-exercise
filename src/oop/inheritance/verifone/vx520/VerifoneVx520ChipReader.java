@@ -6,6 +6,19 @@ import oop.inheritance.data.ExpirationDate;
 
 public class VerifoneVx520ChipReader {
 
+    static public VerifoneVx520ChipReader uniqueInstance;
+
+    private VerifoneVx520ChipReader(){
+
+    }
+
+    static public VerifoneVx520ChipReader getInstance(){
+        if(uniqueInstance == null){
+            uniqueInstance = new VerifoneVx520ChipReader();
+        }
+        return uniqueInstance;
+    }
+
     public Card readCard() {
         return Card.builder()
                 .account("4558211532252558")

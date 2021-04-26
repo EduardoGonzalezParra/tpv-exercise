@@ -3,6 +3,7 @@ package oop.inheritance;
 import java.time.LocalDateTime;
 
 import oop.inheritance.core.TPVDisplay;
+import oop.inheritance.core.TPVFactory;
 import oop.inheritance.core.TPVPrinter;
 import oop.inheritance.data.Card;
 import oop.inheritance.data.CommunicationType;
@@ -28,13 +29,14 @@ public class Application {
 
     private TPVDisplay tpvDisplay;
     private TPVPrinter tpvPrinter;
+    private TPVFactory tpvFactory;
 
     public Application(SupportedTerminal supportedTerminal) {
         this.supportedTerminal = supportedTerminal;
     }
 
     public void showMenu() {
-        displayInstance();
+        TPVDisplay tpvDisplay = tpvFactory.getDisplayInstance();
 
         tpvDisplay.showMessage(5, 5, "MENU");
         tpvDisplay.showMessage(5, 10, "1. VENTA");
@@ -44,16 +46,16 @@ public class Application {
     }
 
     public String readKey() {
-        IngenicoKeyboard ingenicoKeyboard = new IngenicoKeyboard();
+        IngenicoKeyboard ingenicoKeyboard = IngenicoKeyboard.getInstance();
 
         return ingenicoKeyboard.get();
     }
 
     public void doSale() {
-        IngenicoCardSwipper cardSwipper = new IngenicoCardSwipper();
-        IngenicoChipReader chipReader = new IngenicoChipReader();
-        IngenicoDisplay ingenicoDisplay = new IngenicoDisplay();
-        IngenicoKeyboard ingenicoKeyboard = new IngenicoKeyboard();
+        IngenicoCardSwipper cardSwipper = IngenicoCardSwipper.getInstance();
+        IngenicoChipReader chipReader = IngenicoChipReader.getInstance();
+        IngenicoDisplay ingenicoDisplay = IngenicoDisplay.getInstance();
+        IngenicoKeyboard ingenicoKeyboard = IngenicoKeyboard.getInstance();
         Card card;
 
         do {
@@ -98,9 +100,9 @@ public class Application {
     }
 
     private TransactionResponse sendSale(Transaction transaction) {
-        IngenicoEthernet ethernet = new IngenicoEthernet();
-        IngenicoModem modem = new IngenicoModem();
-        IngenicoGPS gps = new IngenicoGPS();
+        IngenicoEthernet ethernet = IngenicoEthernet.getInstance();
+        IngenicoModem modem = IngenicoModem.getInstance();
+        IngenicoGPS gps = IngenicoGPS.getInstance();
         TransactionResponse transactionResponse = null;
 
         switch (communicationType) {
@@ -138,24 +140,9 @@ public class Application {
 
     public void clearScreen() {
 
-        displayInstance();
+        TPVDisplay tpvDisplay = tpvFactory.getDisplayInstance();
 
         tpvDisplay.clear();
-    }
-
-    private void displayInstance() {
-        if (supportedTerminal == SupportedTerminal.INGENICO) {
-            tpvDisplay = new IngenicoDisplay();
-
-        } else if (supportedTerminal == SupportedTerminal.VERIFONE_240) {
-            tpvDisplay = new VerifoneV240mDisplay();
-
-        } else if (supportedTerminal == SupportedTerminal.VERIFONE_520) {
-            tpvDisplay = new VerifoneVx520Display();
-
-        } else if (supportedTerminal == SupportedTerminal.VERIFONE_690) {
-            tpvDisplay = new VerifoneVx690Display();
-        }
     }
 
 }

@@ -4,6 +4,25 @@ import java.util.Properties;
 
 public class IngenicoStorageSystem {
 
+    private static IngenicoStorageSystem uniqueInstance;
+
+    private IngenicoStorageSystem(){
+
+    }
+
+    public static IngenicoStorageSystem getInstance() {
+
+        if (uniqueInstance == null) {
+            synchronized (IngenicoStorageSystem.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new IngenicoStorageSystem();
+                }
+            }
+        }
+
+        return uniqueInstance;
+    }
+
     private Properties properties = new Properties();
 
     public void save(String key, String value) {

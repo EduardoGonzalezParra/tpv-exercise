@@ -4,6 +4,19 @@ import oop.inheritance.core.TPVPrinter;
 
 public class VerifoneVx520Printer implements TPVPrinter {
 
+    static public VerifoneVx520Printer uniqueInstance;
+
+    private VerifoneVx520Printer(){
+
+    }
+
+    static public VerifoneVx520Printer getInstance(){
+        if(uniqueInstance == null) {
+            uniqueInstance = new VerifoneVx520Printer();
+        }
+        return uniqueInstance;
+    }
+
     /**
      * Prints a message on the current line at the specified horizontal position
      *

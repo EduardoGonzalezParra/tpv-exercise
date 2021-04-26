@@ -4,6 +4,25 @@ import oop.inheritance.core.TPVPrinter;
 
 public class IngenicoPrinter implements TPVPrinter {
 
+    private static IngenicoPrinter uniqueInstance;
+
+    private IngenicoPrinter(){
+
+    }
+
+    public static IngenicoPrinter getInstance() {
+
+        if (uniqueInstance == null) {
+            synchronized (IngenicoPrinter.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new IngenicoPrinter();
+                }
+            }
+        }
+
+        return uniqueInstance;
+    }
+
     /**
      * Prints a message on the current line at the specified horizontal position
      *

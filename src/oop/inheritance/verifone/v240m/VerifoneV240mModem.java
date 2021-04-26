@@ -1,6 +1,21 @@
 package oop.inheritance.verifone.v240m;
 
+import java.security.PublicKey;
+
 public class VerifoneV240mModem {
+
+    public static VerifoneV240mModem uniqueInstance;
+
+    private VerifoneV240mModem(){
+
+    }
+
+    public static VerifoneV240mModem getInstance(){
+        if(uniqueInstance == null){
+            uniqueInstance = new VerifoneV240mModem();
+        }
+        return uniqueInstance;
+    }
 
     /**
      * Opens a connection using the modem device

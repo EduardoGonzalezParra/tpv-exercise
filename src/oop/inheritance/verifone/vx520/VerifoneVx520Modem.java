@@ -2,6 +2,19 @@ package oop.inheritance.verifone.vx520;
 
 public class VerifoneVx520Modem {
 
+    static public VerifoneVx520Modem uniqueInstance;
+
+    private VerifoneVx520Modem(){
+
+    }
+
+    static public VerifoneVx520Modem getInstance(){
+        if(uniqueInstance == null) {
+            uniqueInstance = new VerifoneVx520Modem();
+        }
+        return uniqueInstance;
+    }
+
     /**
      * Opens a connection using the modem device
      *
